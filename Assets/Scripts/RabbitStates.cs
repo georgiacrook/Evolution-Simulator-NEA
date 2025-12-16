@@ -1,0 +1,85 @@
+﻿using UnityEngine;
+
+public class RabbitStates : OrganismStates
+{
+    public Animator animator;
+    public GameObject rabbitPrefab;
+
+    public float detectionRange = 55f;
+    //public float runSpeed = 40f;
+    public float rotationSpeed = 10f;
+
+    public bool isRunning = false;
+
+    protected override void Start()
+    {
+        base.Start();
+
+        if (animator == null) 
+        {
+            animator = GetComponent<Animator>(); //retrieve the object 
+        }
+    }
+
+    protected override void Update()
+    {
+        base.Update(); // hunger/thirst logic
+
+        //FoxCheck()
+
+        //animator.SetFloat("Speed", speed);
+        //animator.SetBool("isRunning", isRunning);
+    }
+
+    public bool FoxCheck()
+    {
+        GameObject[] foxes = GameObject.FindGameObjectsWithTag("Fox");
+        Transform nearestFox = null;
+        float nearestDist = 9999;
+
+        foreach (var f in foxes) //retreives nearest fox by comparing distances
+        {
+            float distance = Vector3.Distance(transform.position, f.transform.position);
+            if (distance < nearestDist)
+            {
+                nearestDist = distance;
+                nearestFox = f.transform;
+            }
+        }
+
+        if (nearestFox != null && nearestDist <= detectionRange)
+        {
+            isRunning = true;
+
+            // rotate away from fox
+            Vector3 fleeDirection = (transform.position - nearestFox.position).normalized;
+            Quaternion lookRotation = Quaternion.LookRotation(fleeDirection, Vector3.up);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, rotationSpeed * Time.deltaTime);
+
+            // move forward (manual)
+            //transform.position += transform.forward * runSpeed * Time.deltaTime;
+            speed = 50f;
+
+            return true;
+        }
+        else
+        {
+            isRunning = false;
+            return false;
+        }
+
+        //return false;
+    }
+
+    public override void Lifespan()
+    {
+        base.Lifespan();
+
+        if (lifespanLength == 60) // 1 minute
+        {
+            Debug.Log($"Germination reached: {this.gameObject.name}");
+            //Vector3 position = organism.transform.position;
+            //GameObject rabbit = Instantiate(rabbitPrefab, position, Quaternion.identity); //creates clones of the rabbit
+        }
+    }
+}
