@@ -12,6 +12,7 @@ public class ClickDetector : MonoBehaviour
     public TMP_Text lifespanText;
     public TMP_Text hungerText;
     public TMP_Text thirstText;
+    public Image diseaseImage;
 
 
     public SelectionPressures SelectionPressuresScript;
@@ -45,6 +46,11 @@ public class ClickDetector : MonoBehaviour
             lifespanText.text = "Lifespan: " + OrganismStatesScript.lifespanLength.ToString("F0");
             hungerText.text = "Hunger: " + OrganismStatesScript.hunger.ToString("F0");
             thirstText.text = "Thirst: " + OrganismStatesScript.thirst.ToString("F0");
+
+            if (OrganismStatesScript.disease)
+            {
+                diseaseImage.gameObject.SetActive(true);
+            }
         }
     }
 }

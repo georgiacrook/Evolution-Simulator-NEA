@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Random = UnityEngine.Random;
+using System.Collections.Generic;
 
 public class OrganismStates : MonoBehaviour
 {
@@ -212,8 +213,10 @@ public class OrganismStates : MonoBehaviour
         if (target == null)
         {
             // find nearest organism automatically if none set
-            GameObject[] organisms = GameObject.FindGameObjectsWithTag("Rabbit");
-            organisms += GameObject.FindGameObjectsWithTag("Fox");
+            //GameObject[] organisms = GameObject.FindGameObjectsWithTag("Rabbit") + GameObject.FindGameObjectsWithTag("Fox");
+            List<GameObject> organisms = new List<GameObject>();
+            organisms.AddRange(GameObject.FindGameObjectsWithTag("Rabbit"));
+            organisms.AddRange(GameObject.FindGameObjectsWithTag("Fox"));
 
             float nearest = Mathf.Infinity;
             Transform nearestOrganism = null;
@@ -241,7 +244,13 @@ public class OrganismStates : MonoBehaviour
             if (distance <= contaminationRange)
             {
                 //pass on disease
-                target.GameObject.disease = true;
+                OrganismStates targetStates = target.GetComponent<OrganismStates>();
+
+                if (targetStates != null)
+                {
+                    targetStates.disease = true;
+                    Debug.Log($"{this.gameObject.name} passed on disease")
+                }
             }
             else
             {
