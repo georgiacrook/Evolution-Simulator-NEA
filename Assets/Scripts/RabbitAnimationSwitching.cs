@@ -65,21 +65,13 @@ public class RabbitAnimationSwitching : MonoBehaviour
                 // fixed chase speed
                 speed = 50f;
 
-                // rotate smoothly toward rabbit
-                Vector3 dir = (target.position - transform.position).normalized;
+                // rotate smoothly away from fox
+                Vector3 dir = (transform.position - target.position).normalized;
                 Quaternion lookRot = Quaternion.LookRotation(dir);
                 transform.rotation = Quaternion.Slerp(transform.rotation, lookRot, Time.deltaTime * 10f);
 
                 // move forward
                 transform.position += transform.forward * speed * Time.deltaTime;
-
-                // if close enough → "catch" and destroy rabbit
-                if (distance < 5.0f)
-                {
-                    Destroy(animator.gameObject);
-                    target = null;
-                    isRunning = false;
-                }
             }
             else
             {
@@ -88,9 +80,13 @@ public class RabbitAnimationSwitching : MonoBehaviour
         }
 
         // Animator updates
-        animator.SetFloat("Speed", speed);
-        Debug.Log($"Name: rabbit | Speed: {speed}");
-        animator.SetBool("IsRunning", isRunning);
-        Debug.Log($"rabbit is running");
+        if (isRunning)
+        {
+            animator.SetFloat("Speed", speed);
+            Debug.Log($"Name: rabbit | Speed: {speed}");
+            animator.SetBool("IsRunning", isRunning);
+            Debug.Log($"rabbit is running");
+
+        }
     }
 }

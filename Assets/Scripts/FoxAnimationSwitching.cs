@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class AnimationSwitching : MonoBehaviour
+public class FoxAnimationSwitching : MonoBehaviour
 {
     public Animator animator;
     public Transform target;

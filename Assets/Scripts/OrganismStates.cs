@@ -249,7 +249,7 @@ public class OrganismStates : MonoBehaviour
                 if (targetStates != null)
                 {
                     targetStates.disease = true;
-                    Debug.Log($"{this.gameObject.name} passed on disease")
+                    Debug.Log($"{this.gameObject.name} passed on disease");
                 }
             }
             else

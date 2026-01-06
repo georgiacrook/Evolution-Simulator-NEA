@@ -18,7 +18,7 @@ public class ClickDetector : MonoBehaviour
     public SelectionPressures SelectionPressuresScript;
     public OrganismStates OrganismStatesScript;
 
-    void Update()
+    void Start()
     {
         _renderer = GetComponent<Renderer>();
     }
