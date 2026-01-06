@@ -2,7 +2,7 @@ using UnityEngine; //hello
 
 public class Movement : MonoBehaviour
 {
-    private float moveSpeed = 30f;
+    public float moveSpeed;
     public float raycastHeight = 10f;
     public float raycastDistance = 20f;
     public float terrainOffset = 0.5f; //keeps organism slightly above ground
@@ -18,8 +18,8 @@ public class Movement : MonoBehaviour
 
     void Start()
     {
+        moveSpeed = Random.Range(20f, 40f);
         PickNewDirection();
-
     }
 
     void Update()
@@ -57,6 +57,8 @@ public class Movement : MonoBehaviour
 
         oldAngle = angle;
         moveDirection = new Vector3(x, 0f, z).normalized; //normalized ensures object moves at constant speed
+        Quaternion lookRot = Quaternion.LookRotation(moveDirection);
+        transform.rotation = lookRot;
     }
 
     bool IsGroundAhead()

@@ -28,31 +28,34 @@ public class SelectionPressures: MonoBehaviour
     public void Predation(int count)
     {
         //add in (count) amount of foxes
-        //call FoxLoader with correct count (+10, +20, +30)
-        FoxLoaderScript.Spawn(count); //doesn't run
-        Debug.Log("running spawn()");
+        FoxLoader loader = FindAnyObjectByType<FoxLoader>();
+        if (loader != null)
+        {
+            StartCoroutine(loader.Spawn(count)); 
+            Debug.Log($"running spawn() {count}");
+        }
     }
 
     public void FoodLevels(int change)
     {
         //add/remove (change) amount of berries
 
-        GameObject[] berries = GameObject.FindGameObjectsWithTag("Berry");
-
         if (change < 0) // destroy berries
         {
-            int j = 0;
-            for (int i = change; i < 0; i++)
+            GameObject[] berries = GameObject.FindGameObjectsWithTag("Berry");
+            int toDestroy = Mathf.Min(-change, berries.Length); // don't destroy more than exist
+            for (int i = 0; i < toDestroy; i++)
             {
-                Destroy(berries[j]);
-                j++;
+                Destroy(berries[i]);
             }
         }
-        else //add however many new berries
+        else // add new berries
         {
-            
+            BerryBushLoader loader = FindAnyObjectByType<BerryBushLoader>();
+            if (loader != null)
+            {
+                loader.Spawn(change);
+            }
         }
-        
-       
     }
 }

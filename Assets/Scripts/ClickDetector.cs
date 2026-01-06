@@ -47,10 +47,7 @@ public class ClickDetector : MonoBehaviour
             hungerText.text = "Hunger: " + OrganismStatesScript.hunger.ToString("F0");
             thirstText.text = "Thirst: " + OrganismStatesScript.thirst.ToString("F0");
 
-            if (OrganismStatesScript.disease)
-            {
-                diseaseImage.gameObject.SetActive(true);
-            }
+            diseaseImage.gameObject.SetActive(OrganismStatesScript.disease);
         }
     }
 }

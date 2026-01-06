@@ -19,12 +19,15 @@ public class FoxMovement : MonoBehaviour
     public float speed;
     public bool isChasing = false;
     public bool eat = false;
+    private FoxStates foxStates;
 
     void Start()
     {
+        moveSpeed = Random.Range(20f, 40f);  
         PickNewDirection();
 
         lastPosition = transform.position;
+        foxStates = GetComponent<FoxStates>();
 
         if (animator == null)
         {
@@ -39,7 +42,10 @@ public class FoxMovement : MonoBehaviour
             PickNewDirection();
         }
 
-        transform.position += moveDirection * moveSpeed * Time.deltaTime; //go forward
+        if (!isChasing)
+        {
+            transform.position += moveDirection * moveSpeed * Time.deltaTime; //go forward
+        }
 
         RaycastHit hit;
         Vector3 rayOrigin = new Vector3(transform.position.x, transform.position.y + raycastHeight, transform.position.z); //makes sure raycast doesn't hit collider
@@ -51,7 +57,18 @@ public class FoxMovement : MonoBehaviour
             transform.position = pos;
         }
 
-        RabbitCheck();
+        bool isHungry = foxStates != null && foxStates.hunger <= 60;
+        bool chanceOfHunt = Random.value < 0.05f;
+
+        if (isHungry || (chanceOfHunt && target == null))
+        {
+            RabbitCheck();
+        }
+        else if (!isHungry)
+        {
+            target = null;
+            isChasing = false;
+        }
 
 
         // Animator updates
@@ -74,8 +91,9 @@ public class FoxMovement : MonoBehaviour
 
 
         oldAngle = angle;
-        moveDirection = new Vector3(x, 0f, z).normalized; //normalized ensures object moves at constant speed
+        moveDirection = new Vector3(x, 0f, z).normalized;
         Quaternion lookRot = Quaternion.LookRotation(moveDirection);
+        transform.rotation = lookRot;
     }
 
     bool IsGroundAhead()
@@ -92,6 +110,9 @@ public class FoxMovement : MonoBehaviour
 
     void RabbitCheck()
     {
+        isChasing = false;
+        eat = false;
+
         speed = Vector3.Distance(lastPosition, transform.position) * 100f;
         lastPosition = transform.position;
 
@@ -128,17 +149,27 @@ public class FoxMovement : MonoBehaviour
             {
                 isChasing = true;
 
-                // fixed chase speed
-                speed = 40f;
+                speed = moveSpeed + 10f;
 
                 // rotate smoothly toward rabbit
                 Vector3 dir = (target.position - transform.position).normalized;
                 Quaternion lookRot = Quaternion.LookRotation(dir);
                 transform.rotation = Quaternion.Slerp(transform.rotation, lookRot, Time.deltaTime * 5f);
 
-                // move forward
-                transform.position += transform.forward * speed * Time.deltaTime;
-                distance = Vector3.Distance(transform.position, target.position); //new distance
+                // update moveDirection to match chase direction
+                moveDirection = transform.forward;
+
+                // only move if ground ahead and no water
+                if (IsGroundAhead() && !IsWaterAhead())
+                {
+                    transform.position += transform.forward * speed * Time.deltaTime;
+                }
+                else
+                {
+                    // can't follow into water/off map
+                    target = null;
+                    isChasing = false;
+                }
 
                 // if close enough → "catch" and destroy rabbit
                 if (distance < 5.0f)

@@ -19,7 +19,7 @@ public class BerryBushLoader : OrganismLoader
         //every 20 in-game minutes, a new berry bush loades as long as there is at-least one berry bush loaded
     }
 
-    void Spawn(int count)
+    public void Spawn(int count)
     {
         for (int i = 0; i < count; i++)
         {

@@ -80,13 +80,9 @@ public class RabbitAnimationSwitching : MonoBehaviour
         }
 
         // Animator updates
-        if (isRunning)
-        {
-            animator.SetFloat("Speed", speed);
-            Debug.Log($"Name: rabbit | Speed: {speed}");
-            animator.SetBool("IsRunning", isRunning);
-            Debug.Log($"rabbit is running");
-
-        }
+        animator.SetFloat("Speed", speed);
+        Debug.Log($"Name: rabbit | Speed: {speed}");
+        animator.SetBool("IsRunning", isRunning);
+        Debug.Log($"rabbit is running");
     }
 }
