@@ -23,10 +23,6 @@ public class SelectionPressures: MonoBehaviour
         Cursor.SetCursor(newColour, location, CursorMode.Auto);
         Debug.Log("Cursor colour changed");
         disease = true;
-
-        //selected organism lifespan reduced by 50% and glows green
-        //collisions between organisms with infeceted organism passes on disease - those hit will also have reduced lifespan
-        //cursor returns to normal after clicking an organism
     }
 
     public void Predation(int count)

@@ -36,6 +36,11 @@ public class OrganismStates : MonoBehaviour
     //speed
     private Vector3 lastPosition;
 
+    //disease
+
+    public Transform target;
+    public float contaminationRange = 20f;
+
     protected virtual void Start()
     {
         movement = GetComponent<Movement>(); //movement code
@@ -79,6 +84,7 @@ public class OrganismStates : MonoBehaviour
     public void Thirsty()
     {
         Debug.Log($" {this.gameObject.name} THIRSTY | Thirst: {thirst}");
+
         //check for water
         if (WaterCheck())
         {
@@ -203,6 +209,44 @@ public class OrganismStates : MonoBehaviour
 
     public void Diseased()
     {
-        //if collision with another organism, passes on disease to them
+        if (target == null)
+        {
+            // find nearest organism automatically if none set
+            GameObject[] organisms = GameObject.FindGameObjectsWithTag("Rabbit");
+            organisms += GameObject.FindGameObjectsWithTag("Fox");
+
+            float nearest = Mathf.Infinity;
+            Transform nearestOrganism = null;
+
+            foreach (var r in organisms)
+            {
+                float d = Vector3.Distance(transform.position, r.transform.position);
+                if (d < nearest)
+                {
+                    nearest = d;
+                    nearestOrganism = r.transform;
+                }
+            }
+
+            if (nearestOrganism != null && nearest <= contaminationRange)
+            {
+                target = nearestOrganism;
+            }
+        }
+
+        if (target != null)
+        {
+            float distance = Vector3.Distance(transform.position, target.position);
+
+            if (distance <= contaminationRange)
+            {
+                //pass on disease
+                target.GameObject.disease = true;
+            }
+            else
+            {
+                target = null;
+            }
+        }
     }
 }
