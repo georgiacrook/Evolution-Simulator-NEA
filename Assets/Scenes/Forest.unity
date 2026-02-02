@@ -5081,6 +5081,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 993888146f538274a9532477c8a25df1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveSpeed: 30
   raycastHeight: 10
   raycastDistance: 20
   terrainOffset: 0.5
@@ -5204,7 +5205,7 @@ MonoBehaviour:
   lifespanText: {fileID: 236620404}
   hungerText: {fileID: 1703557438}
   thirstText: {fileID: 544908814}
-  diseaseImage: {fileID: 0}
+  diseaseImage: {fileID: 360677344}
   SelectionPressuresScript: {fileID: 824154110}
   OrganismStatesScript: {fileID: 948988463}
 --- !u!1 &951431157
@@ -6666,7 +6667,7 @@ MonoBehaviour:
   lifespanText: {fileID: 236620404}
   hungerText: {fileID: 1703557438}
   thirstText: {fileID: 544908814}
-  diseaseImage: {fileID: 0}
+  diseaseImage: {fileID: 360677344}
   SelectionPressuresScript: {fileID: 824154110}
   OrganismStatesScript: {fileID: 1103733706}
 --- !u!1 &1119398897

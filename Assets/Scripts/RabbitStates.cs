@@ -57,7 +57,7 @@ public class RabbitStates : OrganismStates
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, rotationSpeed * Time.deltaTime);
 
             // move forward (manual)
-            transform.position += transform.forward * (movementScript.moveSpeed + 15f) * Time.deltaTime;
+            transform.position += transform.forward * (movementScript.moveSpeed + 15f) * Time.deltaTime; //fix
 
             return true;
         }
