@@ -15,6 +15,7 @@ public class Movement : MonoBehaviour
     private Vector3 moveDirection;
     public float speed;
     private Vector3 lastPosition;
+    public bool isRunning = false;
 
     void Start()
     {
@@ -29,7 +30,10 @@ public class Movement : MonoBehaviour
         PickNewDirection();
         }
 
-        transform.position += moveDirection * moveSpeed * Time.deltaTime; //go forward
+        if (!isRunning)
+        {
+            transform.position += moveDirection * moveSpeed * Time.deltaTime; //go forward
+        }
 
         RaycastHit hit;
         Vector3 rayOrigin = new Vector3(transform.position.x, transform.position.y + raycastHeight, transform.position.z); //makes sure raycast doesn't hit collider

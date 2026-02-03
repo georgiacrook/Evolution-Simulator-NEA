@@ -13,6 +13,8 @@ public class OrganismStates : MonoBehaviour
 
     public float hunger = 100f;
     public float thirst = 100f;
+    private float hungerRate;
+    private float thirstRate;
 
     //states
     protected bool isDrinking = false;
@@ -26,27 +28,28 @@ public class OrganismStates : MonoBehaviour
     public LayerMask waterLayer;
     public LayerMask foodLayer;
     public Transform food;
-    public float vision = 80f;
+    public float vision;
 
     //time management
     public float lifespanLength;
     public float maxLifeLength = 300;
 
     public bool disease = false;
-
-    //speed
     private Vector3 lastPosition;
 
     //disease
-
     public Transform target;
     public float contaminationRange = 20f;
 
     protected virtual void Start()
     {
         movement = GetComponent<Movement>(); //movement code
-
         lastPosition = transform.position;
+
+        hungerRate = Random.Range(0.006f, 0.012f);
+        thirstRate = Random.Range(0.007f, 0.013f);
+
+        vision = Random.Range(75f, 90f);
     }
 
     protected virtual void Update()
@@ -55,16 +58,18 @@ public class OrganismStates : MonoBehaviour
         speed = Vector3.Distance(lastPosition, transform.position) * 100f;
         lastPosition = transform.position;
 
+        Lifespan();
+
         //organism death
         if (hunger <= 0 || thirst <= 0)
         {
             Die();
         }
 
-        hunger -= 0.009f;
-        thirst -= 0.01f;
+        hunger -= hungerRate;
+        thirst -= thirstRate;
 
-        if (hunger <= 60 && !isEating)
+        if (hunger <= 75 && !isEating)
         {
             Hungry();
         }
@@ -73,8 +78,6 @@ public class OrganismStates : MonoBehaviour
         {
             Thirsty();
         }
-
-        Lifespan();
 
         if (disease)
         {
@@ -143,9 +146,8 @@ public class OrganismStates : MonoBehaviour
                 transform.rotation = Quaternion.Slerp(transform.rotation, lookRot, Time.deltaTime * 5f);
 
                 // move forward
-                transform.position += transform.forward * speed * Time.deltaTime; //not working? sometimes
+                transform.position += transform.forward * speed * Time.deltaTime; 
 
-                // if close enough → "catch" and destroy rabbit
                 if (distance < 5.0f)
                 {
                     Eat();
@@ -192,7 +194,7 @@ public class OrganismStates : MonoBehaviour
         isEating = false;
     }
 
-    public virtual void Lifespan()
+    protected virtual void Lifespan()
     {
         lifespanLength += Time.deltaTime;
 
@@ -213,7 +215,6 @@ public class OrganismStates : MonoBehaviour
         if (target == null)
         {
             // find nearest organism automatically if none set
-            //GameObject[] organisms = GameObject.FindGameObjectsWithTag("Rabbit") + GameObject.FindGameObjectsWithTag("Fox");
             List<GameObject> organisms = new List<GameObject>();
             organisms.AddRange(GameObject.FindGameObjectsWithTag("Rabbit"));
             organisms.AddRange(GameObject.FindGameObjectsWithTag("Fox"));

@@ -10,10 +10,15 @@ public class RabbitStates : OrganismStates
     public float rotationSpeed = 10f;
 
     public bool isRunning = false;
+    private Movement movementScript;
 
     protected override void Start()
     {
         base.Start();
+        if (movementScript == null)
+        {
+            movementScript = GetComponent<Movement>();
+        }
 
         if (animator == null) 
         {
@@ -25,7 +30,7 @@ public class RabbitStates : OrganismStates
     {
         base.Update(); // hunger/thirst logic
 
-        //FoxCheck()
+        FoxCheck();
 
         //animator.SetFloat("Speed", speed);
         //animator.SetBool("isRunning", isRunning);
@@ -50,6 +55,10 @@ public class RabbitStates : OrganismStates
         if (nearestFox != null && nearestDist <= detectionRange)
         {
             isRunning = true;
+            if (movementScript != null)
+            {
+                movementScript.isRunning = true;
+            }
 
             // rotate away from fox
             Vector3 fleeDirection = (transform.position - nearestFox.position).normalized;
@@ -57,28 +66,36 @@ public class RabbitStates : OrganismStates
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, rotationSpeed * Time.deltaTime);
 
             // move forward (manual)
-            transform.position += transform.forward * (movementScript.moveSpeed + 15f) * Time.deltaTime; //fix
+            if (movementScript != null)
+            {
+                transform.position += transform.forward * (movementScript.moveSpeed + 15f) * Time.deltaTime;
+
+            }
 
             return true;
         }
         else
         {
             isRunning = false;
+            if (movementScript != null)
+            {
+                movementScript.isRunning = false;
+            }
             return false;
         }
 
         //return false;
     }
 
-    public override void Lifespan()
+    protected override void Lifespan()
     {
         base.Lifespan();
 
         if (lifespanLength == 60) // 1 minute
         {
             Debug.Log($"Germination reached: {this.gameObject.name}");
-            //Vector3 position = organism.transform.position;
-            //GameObject rabbit = Instantiate(rabbitPrefab, position, Quaternion.identity); //creates clones of the rabbit
+            Vector3 position = organism.transform.position;
+            GameObject rabbit = Instantiate(rabbitPrefab, position, Quaternion.identity); //creates clones of the rabbit
         }
     }
 }

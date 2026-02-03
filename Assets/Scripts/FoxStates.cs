@@ -32,15 +32,15 @@ public class FoxStates : OrganismStates
         }
     }
 
-    public override void Lifespan()
+    protected override void Lifespan()
     {
         base.Lifespan();
 
         if (lifespanLength == 60) // 1 minute
         {
             Debug.Log($"Germination reached: {this.gameObject.name}");
-            //Vector3 position = organism.transform.position;
-            //GameObject fox = Instantiate(foxPrefab, position, Quaternion.identity); //creates clones of the fox
+            Vector3 position = organism.transform.position;
+            GameObject fox = Instantiate(foxPrefab, position, Quaternion.identity); //creates clones of the fox
         }
     }
 }
