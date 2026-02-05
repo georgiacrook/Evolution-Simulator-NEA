@@ -11,6 +11,7 @@ public class RabbitStates : OrganismStates
 
     public bool isRunning = false;
     private Movement movementScript;
+    private bool hasGerminated = false;
 
     protected override void Start()
     {
@@ -91,8 +92,9 @@ public class RabbitStates : OrganismStates
     {
         base.Lifespan();
 
-        if (lifespanLength == 60) // 1 minute
+        if (lifespanLength == 60 && !hasGerminated) // 1 minute
         {
+            hasGerminated = true;
             Debug.Log($"Germination reached: {this.gameObject.name}");
             Vector3 position = organism.transform.position;
             GameObject rabbit = Instantiate(rabbitPrefab, position, Quaternion.identity); //creates clones of the rabbit

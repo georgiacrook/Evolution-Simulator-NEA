@@ -779,7 +779,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 812001553}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 500
+  m_MaxValue: 250
   m_WholeNumbers: 1
   m_Value: 0
   m_OnValueChanged:
@@ -1330,7 +1330,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 44063176}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 500
+  m_MaxValue: 250
   m_WholeNumbers: 1
   m_Value: 0
   m_OnValueChanged:
@@ -3295,7 +3295,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1223846761}
   m_Layer: 0
-  m_Name: Canvases
+  m_Name: Panels
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3931,7 +3931,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1878887199}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 500
+  m_MaxValue: 250
   m_WholeNumbers: 1
   m_Value: 0
   m_OnValueChanged:

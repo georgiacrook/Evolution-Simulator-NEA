@@ -4,6 +4,7 @@ public class FoxStates : OrganismStates
 {
     public Animator animator;
     public GameObject foxPrefab;
+    private bool hasGerminated = false;
 
     protected override void Start()
     {
@@ -36,8 +37,9 @@ public class FoxStates : OrganismStates
     {
         base.Lifespan();
 
-        if (lifespanLength == 60) // 1 minute
+        if (lifespanLength == 60 && !hasGerminated) // 1 minute
         {
+            hasGerminated = true;
             Debug.Log($"Germination reached: {this.gameObject.name}");
             Vector3 position = organism.transform.position;
             GameObject fox = Instantiate(foxPrefab, position, Quaternion.identity); //creates clones of the fox

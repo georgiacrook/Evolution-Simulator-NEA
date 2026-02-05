@@ -23,7 +23,7 @@ public class FoxMovement : MonoBehaviour
 
     void Start()
     {
-        moveSpeed = Random.Range(20f, 40f);  
+        moveSpeed = Random.Range(30f, 40f);  
         PickNewDirection();
 
         lastPosition = transform.position;
@@ -37,6 +37,8 @@ public class FoxMovement : MonoBehaviour
 
     void Update()
     {
+        DetectLocation();
+
         if (!IsGroundAhead() || IsWaterAhead()) //if reached edge of world or water
         {
             PickNewDirection();
@@ -58,9 +60,9 @@ public class FoxMovement : MonoBehaviour
         }
 
         bool isHungry = foxStates != null && foxStates.hunger <= 60;
-        bool chanceOfHunt = Random.value < 0.05f;
+        float chanceOfHunt = Random.Range(1f, 100f);
 
-        if (isHungry || (chanceOfHunt && target == null))
+        if (isHungry || chanceOfHunt >= 75f)
         {
             RabbitCheck();
         }
@@ -75,6 +77,41 @@ public class FoxMovement : MonoBehaviour
         animator.SetFloat("speed", speed);
         animator.SetBool("isChasing", isChasing);
         animator.SetBool("eat", eat);
+    }
+    void DetectLocation()
+    {
+        Vector3 rayOrigin = transform.position + Vector3.up * raycastHeight;
+
+        bool onWater = Physics.Raycast(rayOrigin, Vector3.down, raycastDistance, waterLayer);
+        bool onGround = Physics.Raycast(rayOrigin, Vector3.down,  raycastDistance, groundLayer);
+
+        if (onWater || !onGround)
+        {
+            float checkRadius = 10f;
+
+            for (float dist = checkRadius; dist <= 50f; dist += 5f)
+            {
+                for (float angle = 0f; angle < 360f; angle += 45f)
+                {
+                    float x = Mathf.Cos(angle * Mathf.Deg2Rad) * dist;
+                    float z = Mathf.Sin(angle * Mathf.Deg2Rad) * dist;
+
+                    Vector3 checkPos = transform.position + new Vector3(x, raycastHeight, z);
+                    RaycastHit hit;
+
+                    bool foundGround = Physics.Raycast(checkPos, Vector3.down, out hit, raycastDistance, groundLayer);
+                    bool foundWater = Physics.Raycast(checkPos, Vector3.down, raycastDistance, waterLayer);
+
+                    if (foundGround && !foundWater)
+                    {
+                        // Teleport to valid position
+                        transform.position = hit.point + Vector3.up * terrainOffset;
+                        PickNewDirection();
+                        return;
+                    }
+                }
+            }            
+        }
     }
 
     void PickNewDirection()
@@ -149,7 +186,7 @@ public class FoxMovement : MonoBehaviour
             {
                 isChasing = true;
 
-                speed = moveSpeed + 10f;
+                speed = moveSpeed + 20f;
 
                 // rotate smoothly toward rabbit
                 Vector3 dir = (target.position - transform.position).normalized;
