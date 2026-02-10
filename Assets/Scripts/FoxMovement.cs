@@ -2,7 +2,7 @@
 
 public class FoxMovement : MonoBehaviour
 {
-    private float moveSpeed = 30f;
+    public float moveSpeed = 30f;
     public float raycastHeight = 10f;
     public float raycastDistance = 20f;
     public float terrainOffset = 0.5f; //keeps organism slightly above ground
@@ -21,6 +21,9 @@ public class FoxMovement : MonoBehaviour
     public bool eat = false;
     private FoxStates foxStates;
     private int stuckFrames = 0;
+
+    private bool wantsToHunt = false;
+    private float huntTimer = 0f;
 
     void Start()
     {
@@ -61,9 +64,14 @@ public class FoxMovement : MonoBehaviour
         }
 
         bool isHungry = foxStates != null && foxStates.hunger <= 60;
-        float chanceOfHunt = Random.Range(1f, 100f);
+        huntTimer -= Time.deltaTime;
+        if (huntTimer <= 0f)
+        {
+            wantsToHunt = Random.Range(1f, 100f) >= 75f;
+            huntTimer = 5f; 
+        }
 
-        if (isHungry || chanceOfHunt >= 75f)
+        if (isHungry || wantsToHunt)
         {
             RabbitCheck();
         }
@@ -163,8 +171,6 @@ public class FoxMovement : MonoBehaviour
         speed = Vector3.Distance(lastPosition, transform.position) * 100f;
         lastPosition = transform.position;
 
-        isChasing = false;
-
         if (target == null)
         {
             // find nearest rabbit automatically if none set
@@ -226,6 +232,15 @@ public class FoxMovement : MonoBehaviour
                     Destroy(target.gameObject);
                     target = null;
                     isChasing = false;
+
+                    if (foxStates != null)
+                    {
+                        foxStates.hunger += 20f;
+                        if (foxStates.hunger > 100f)
+                        {
+                            foxStates.hunger = 100f;
+                        }
+                    }
                 }
             }
             else
@@ -233,10 +248,5 @@ public class FoxMovement : MonoBehaviour
                 target = null;
             }
         }
-
-        // Animator updates
-        animator.SetFloat("speed", speed);
-        animator.SetBool("isChasing", isChasing);
-        animator.SetBool("eat", eat);
     }
 }

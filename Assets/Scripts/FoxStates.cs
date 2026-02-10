@@ -58,4 +58,9 @@ public class FoxStates : OrganismStates
             }
         }
     }
+
+    protected override void Hungry()
+    {
+        //dont eat berries
+    }
 }

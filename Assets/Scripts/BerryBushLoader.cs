@@ -15,8 +15,6 @@ public class BerryBushLoader : OrganismLoader
         Spawn(count);
 
         berryCount.text = ($"Berry Bush Count: {count.ToString()} ");
-
-        //every 20 in-game minutes, a new berry bush loades as long as there is at-least one berry bush loaded
     }
 
     public void Spawn(int count)

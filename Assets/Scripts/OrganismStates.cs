@@ -46,8 +46,8 @@ public class OrganismStates : MonoBehaviour
         movement = GetComponent<Movement>(); //movement code
         lastPosition = transform.position;
 
-        hungerRate = Random.Range(0.006f, 0.012f);
-        thirstRate = Random.Range(0.007f, 0.013f);
+        hungerRate = Random.Range(0.4f, 0.8f);
+        thirstRate = Random.Range(0.5f, 0.9f);
 
         vision = Random.Range(75f, 90f);
     }
@@ -87,8 +87,6 @@ public class OrganismStates : MonoBehaviour
 
     public void Thirsty()
     {
-        Debug.Log($" {this.gameObject.name} THIRSTY | Thirst: {thirst}");
-
         //check for water
         if (WaterCheck())
         {
@@ -96,9 +94,8 @@ public class OrganismStates : MonoBehaviour
         }
     }
 
-    public void Hungry()
+    protected virtual void Hungry()
     {
-        Debug.Log($"{this.gameObject.name} HUNGRY | Hunger: {hunger}");
         //check for food
         FoodCheck();
     }
@@ -140,23 +137,27 @@ public class OrganismStates : MonoBehaviour
 
             if (distance <= vision)
             {
+                movement.enabled = false;
+
                 // rotate smoothly toward berry
                 Vector3 dir = (food.position - transform.position).normalized;
                 Quaternion lookRot = Quaternion.LookRotation(dir);
                 transform.rotation = Quaternion.Slerp(transform.rotation, lookRot, Time.deltaTime * 5f);
 
                 // move forward
-                transform.position += transform.forward * speed * Time.deltaTime; 
+                transform.position += transform.forward * movement.moveSpeed * Time.deltaTime; 
 
                 if (distance < 5.0f)
                 {
                     Eat();
                     food = null;
+                    movement.enabled = true;
                 }
             }
             else
             {
                 food = null;
+                movement.enabled = true;
             }
         }
     }
