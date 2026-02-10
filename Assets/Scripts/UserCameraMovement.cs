@@ -36,6 +36,6 @@ public class UserCameraMovement : MonoBehaviour
     {
         Vector3 input = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
         
-        transform.Translate(input * speed * Time.deltaTime);
+        transform.Translate(input * speed * Time.unscaledDeltaTime);
     }
 }

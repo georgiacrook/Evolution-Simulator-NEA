@@ -81,8 +81,6 @@ public class RabbitAnimationSwitching : MonoBehaviour
 
         // Animator updates
         animator.SetFloat("Speed", speed);
-        Debug.Log($"Name: rabbit | Speed: {speed}");
         animator.SetBool("IsRunning", isRunning);
-        Debug.Log($"rabbit is running");
     }
 }

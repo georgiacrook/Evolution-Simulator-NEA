@@ -33,8 +33,8 @@ public class RabbitStates : OrganismStates
 
         FoxCheck();
 
-        //animator.SetFloat("Speed", speed);
-        //animator.SetBool("isRunning", isRunning);
+        animator.SetFloat("Speed", speed);
+        animator.SetBool("isRunning", isRunning);
     }
 
     public bool FoxCheck()
@@ -92,12 +92,25 @@ public class RabbitStates : OrganismStates
     {
         base.Lifespan();
 
-        if (lifespanLength == 60 && !hasGerminated) // 1 minute
+        if (lifespanLength >= 60 && !hasGerminated)
         {
             hasGerminated = true;
-            Debug.Log($"Germination reached: {this.gameObject.name}");
-            Vector3 position = organism.transform.position;
-            GameObject rabbit = Instantiate(rabbitPrefab, position, Quaternion.identity); //creates clones of the rabbit
+
+            if (Random.value <= 0.5f)
+            {
+                RabbitLoader loader = FindAnyObjectByType<RabbitLoader>();
+                if (loader != null)
+                {
+                    Movement parentMovement = GetComponent<Movement>();
+                    float speed = parentMovement != null ? parentMovement.moveSpeed : 30f;
+                    loader.SpawnOffspring(organism.transform.position, speed, vision, detectionRange, rotationSpeed);
+                    Debug.Log($"{this.gameObject.name} spawned 1 offspring");
+                }
+            }
+            else
+            {
+                Debug.Log($"{this.gameObject.name} did not reproduce");
+            }
         }
     }
 }

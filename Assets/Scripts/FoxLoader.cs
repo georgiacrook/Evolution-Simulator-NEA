@@ -14,9 +14,9 @@ public class FoxLoader : OrganismLoader
 
     private int maxCount = 100;
     private int batchSize = 10;
-    private static bool alreadySpawned = false; // scene-wide guard
+    private static bool alreadySpawned = false;
 
-    private List<GameObject> foxes = new List<GameObject>(); //list of loaded foxes
+    private List<GameObject> foxes = new List<GameObject>();
 
     void Start()
     {
@@ -46,6 +46,27 @@ public class FoxLoader : OrganismLoader
             {
                 yield return null; //waits one frame
             }
+        }
+    }
+
+    public void SpawnOffspring(Vector3 position, float parentMoveSpeed, float parentVision)
+    {
+        GameObject fox = Instantiate(foxPrefab, position, Quaternion.identity);
+        foxes.Add(fox);
+
+        int randomIndex = Random.Range(0, organismNameList.Length);
+        fox.name = organismNameList[randomIndex];
+
+        Movement movement = fox.GetComponent<Movement>();
+        if (movement != null)
+        {
+            movement.moveSpeed = parentMoveSpeed;
+        }
+
+        FoxStates states = fox.GetComponent<FoxStates>();
+        if (states != null)
+        {
+            states.vision = parentVision;
         }
     }
 }

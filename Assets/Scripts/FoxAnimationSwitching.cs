@@ -71,7 +71,7 @@ public class FoxAnimationSwitching : MonoBehaviour
                 transform.position += transform.forward * speed * Time.deltaTime;
                 distance = Vector3.Distance(transform.position, target.position); //new distance
 
-                // if close enough → "catch" and destroy rabbit
+                // if close enough, destroy rabbit
                 if (distance < 5.0f)
                 {
                     eat = true;
@@ -87,9 +87,6 @@ public class FoxAnimationSwitching : MonoBehaviour
             }
         }
 
-        // Animator updates
-        animator.SetFloat("speed", speed);
-        animator.SetBool("isChasing", isChasing);
-        animator.SetBool("eat", eat);
+        
     }
 }

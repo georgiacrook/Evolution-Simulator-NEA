@@ -16,6 +16,7 @@ public class Movement : MonoBehaviour
     public float speed;
     private Vector3 lastPosition;
     public bool isRunning = false;
+    private int stuckFrames = 0;
 
     void Start()
     {
@@ -57,30 +58,38 @@ public class Movement : MonoBehaviour
 
         if (onWater || !onGround)
         {
-            float checkRadius = 10f;
+            stuckFrames++;
 
-            for (float dist = checkRadius; dist <= 50f; dist += 5f)
+            if (stuckFrames >= 10)
             {
-                for (float angle = 0f; angle < 360f; angle += 45f)
+                for (float dist = 10f; dist <= 50f; dist += 5f)
                 {
-                    float x = Mathf.Cos(angle * Mathf.Deg2Rad) * dist;
-                    float z = Mathf.Sin(angle * Mathf.Deg2Rad) * dist;
-
-                    Vector3 checkPos = transform.position + new Vector3(x, raycastHeight, z);
-                    RaycastHit hit;
-
-                    bool foundGround = Physics.Raycast(checkPos, Vector3.down, out hit, raycastDistance, groundLayer);
-                    bool foundWater = Physics.Raycast(checkPos, Vector3.down, raycastDistance, waterLayer);
-
-                    if (foundGround && !foundWater)
+                    for (float angle = 0f; angle < 360f; angle += 45f)
                     {
-                        // Teleport to valid position
-                        transform.position = hit.point + Vector3.up * terrainOffset;
-                        PickNewDirection();
-                        return;
+                        float x = Mathf.Cos(angle * Mathf.Deg2Rad) * dist;
+                        float z = Mathf.Sin(angle * Mathf.Deg2Rad) * dist;
+
+                        Vector3 checkPos = transform.position + new Vector3(x, raycastHeight, z);
+                        RaycastHit hit;
+
+                        bool foundGround = Physics.Raycast(checkPos, Vector3.down, out hit, raycastDistance, groundLayer);
+                        bool foundWater = Physics.Raycast(checkPos, Vector3.down, raycastDistance, waterLayer);
+
+                        if (foundGround && !foundWater)
+                        {
+                            // Teleport to valid position
+                            transform.position = hit.point + Vector3.up * terrainOffset;
+                            PickNewDirection();
+                            stuckFrames = 0;
+                            return;
+                        }
                     }
                 }
-            }
+            }            
+        }
+        else
+        {
+            stuckFrames = 0;
         }
     }
 

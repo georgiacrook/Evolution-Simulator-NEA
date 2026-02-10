@@ -37,12 +37,25 @@ public class FoxStates : OrganismStates
     {
         base.Lifespan();
 
-        if (lifespanLength == 60 && !hasGerminated) // 1 minute
+        if (lifespanLength >= 60 && !hasGerminated)
         {
             hasGerminated = true;
-            Debug.Log($"Germination reached: {this.gameObject.name}");
-            Vector3 position = organism.transform.position;
-            GameObject fox = Instantiate(foxPrefab, position, Quaternion.identity); //creates clones of the fox
+
+            if (Random.value <= 0.5f)
+            {
+                FoxLoader loader = FindAnyObjectByType<FoxLoader>();
+                if (loader != null)
+                {
+                    Movement parentMovement = GetComponent<Movement>();
+                    float speed = parentMovement != null ? parentMovement.moveSpeed : 30f;
+                    loader.SpawnOffspring(organism.transform.position, speed, vision);
+                    Debug.Log($"{this.gameObject.name} spawned 1 offspring");
+                }
+            }
+            else
+            {
+                Debug.Log($"{this.gameObject.name} did not reproduce");
+            }
         }
     }
 }

@@ -48,4 +48,27 @@ public class RabbitLoader : OrganismLoader
             }
         }
     }
+
+    public void SpawnOffspring(Vector3 position, float parentMoveSpeed, float parentVision, float parentDetectionRange, float parentRotationSpeed)
+    {
+        GameObject rabbit = Instantiate(rabbitPrefab, position, Quaternion.identity);
+        rabbits.Add(rabbit);
+
+        int randomIndex = Random.Range(0, organismNameList.Length);
+        rabbit.name = organismNameList[randomIndex];
+
+        Movement movement = rabbit.GetComponent<Movement>();
+        if (movement != null)
+        {
+            movement.moveSpeed = parentMoveSpeed;
+        }
+
+        RabbitStates states = rabbit.GetComponent<RabbitStates>();
+        if (states != null)
+        {
+            states.vision = parentVision;
+            states.detectionRange = parentDetectionRange;
+            states.rotationSpeed = parentRotationSpeed;
+        }
+    }
 }

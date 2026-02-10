@@ -66,8 +66,8 @@ public class OrganismStates : MonoBehaviour
             Die();
         }
 
-        hunger -= hungerRate;
-        thirst -= thirstRate;
+        hunger -= hungerRate * Time.deltaTime;
+        thirst -= thirstRate * Time.deltaTime;
 
         if (hunger <= 75 && !isEating)
         {
@@ -178,6 +178,8 @@ public class OrganismStates : MonoBehaviour
 
     protected virtual void Eat()
     {
+        if (food == null) return;
+
         isEating = true;
         movement.enabled = false;
 
@@ -224,6 +226,8 @@ public class OrganismStates : MonoBehaviour
 
             foreach (var r in organisms)
             {
+                if (r == this.gameObject) continue;
+
                 float d = Vector3.Distance(transform.position, r.transform.position);
                 if (d < nearest)
                 {

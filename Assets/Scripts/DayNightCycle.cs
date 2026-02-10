@@ -13,8 +13,6 @@ public class DayNightCycle : MonoBehaviour
     public float realTimeDuration = 600f;
     private float realTimeElapsed = 0f;
 
-    public float timeScale = 0.5f;
-
     private float startTime = 8f;
     private int dayCount = 1;
 

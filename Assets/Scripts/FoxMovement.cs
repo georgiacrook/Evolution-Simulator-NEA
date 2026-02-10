@@ -20,6 +20,7 @@ public class FoxMovement : MonoBehaviour
     public bool isChasing = false;
     public bool eat = false;
     private FoxStates foxStates;
+    private int stuckFrames = 0;
 
     void Start()
     {
@@ -78,39 +79,48 @@ public class FoxMovement : MonoBehaviour
         animator.SetBool("isChasing", isChasing);
         animator.SetBool("eat", eat);
     }
+
     void DetectLocation()
     {
         Vector3 rayOrigin = transform.position + Vector3.up * raycastHeight;
 
         bool onWater = Physics.Raycast(rayOrigin, Vector3.down, raycastDistance, waterLayer);
-        bool onGround = Physics.Raycast(rayOrigin, Vector3.down,  raycastDistance, groundLayer);
+        bool onGround = Physics.Raycast(rayOrigin, Vector3.down, raycastDistance, groundLayer);
 
         if (onWater || !onGround)
         {
-            float checkRadius = 10f;
+            stuckFrames++;
 
-            for (float dist = checkRadius; dist <= 50f; dist += 5f)
+            if (stuckFrames >= 10)
             {
-                for (float angle = 0f; angle < 360f; angle += 45f)
+                for (float dist = 10f; dist <= 50f; dist += 5f)
                 {
-                    float x = Mathf.Cos(angle * Mathf.Deg2Rad) * dist;
-                    float z = Mathf.Sin(angle * Mathf.Deg2Rad) * dist;
-
-                    Vector3 checkPos = transform.position + new Vector3(x, raycastHeight, z);
-                    RaycastHit hit;
-
-                    bool foundGround = Physics.Raycast(checkPos, Vector3.down, out hit, raycastDistance, groundLayer);
-                    bool foundWater = Physics.Raycast(checkPos, Vector3.down, raycastDistance, waterLayer);
-
-                    if (foundGround && !foundWater)
+                    for (float angle = 0f; angle < 360f; angle += 45f)
                     {
-                        // Teleport to valid position
-                        transform.position = hit.point + Vector3.up * terrainOffset;
-                        PickNewDirection();
-                        return;
+                        float x = Mathf.Cos(angle * Mathf.Deg2Rad) * dist;
+                        float z = Mathf.Sin(angle * Mathf.Deg2Rad) * dist;
+
+                        Vector3 checkPos = transform.position + new Vector3(x, raycastHeight, z);
+                        RaycastHit hit;
+
+                        bool foundGround = Physics.Raycast(checkPos, Vector3.down, out hit, raycastDistance, groundLayer);
+                        bool foundWater = Physics.Raycast(checkPos, Vector3.down, raycastDistance, waterLayer);
+
+                        if (foundGround && !foundWater)
+                        {
+                            // Teleport to valid position
+                            transform.position = hit.point + Vector3.up * terrainOffset;
+                            PickNewDirection();
+                            stuckFrames = 0;
+                            return;
+                        }
                     }
                 }
-            }            
+            }
+        }
+        else
+        {
+            stuckFrames = 0;
         }
     }
 
@@ -208,7 +218,7 @@ public class FoxMovement : MonoBehaviour
                     isChasing = false;
                 }
 
-                // if close enough → "catch" and destroy rabbit
+                // if close enough, destroy rabbit
                 if (distance < 5.0f)
                 {
                     eat = true;
@@ -223,5 +233,10 @@ public class FoxMovement : MonoBehaviour
                 target = null;
             }
         }
+
+        // Animator updates
+        animator.SetFloat("speed", speed);
+        animator.SetBool("isChasing", isChasing);
+        animator.SetBool("eat", eat);
     }
 }
