@@ -9,9 +9,6 @@ public class SelectionPressures: MonoBehaviour
     public bool disease = false;
     public Vector2 location;
 
-    //prefabs & gameObjects
-    //GameObject fox;
-    //fox.GetComponent<FoxLoader>();
     public GameObject foxPrefab;
     public GameObject berry;
 

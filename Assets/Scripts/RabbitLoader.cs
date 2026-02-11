@@ -12,7 +12,7 @@ public class RabbitLoader : OrganismLoader
     public string organismName;
     private string[] organismNameList = { "Bob", "Pete", "Robert", "Linda", "Gertrude", "Olivia" };
 
-    private int maxCount = 100;
+    private int maxCount = 250;
     private int batchSize = 10;
     private static bool alreadySpawned = false; // scene-wide guard
 

@@ -5428,7 +5428,7 @@ MonoBehaviour:
   food: {fileID: 1688061406}
   vision: 80
   lifespanLength: 0
-  maxLifeLength: 300
+  maxLifeLength: 120
   disease: 0
   target: {fileID: 0}
   contaminationRange: 20
@@ -6866,7 +6866,7 @@ MonoBehaviour:
   food: {fileID: 948988453}
   vision: 80
   lifespanLength: 0
-  maxLifeLength: 300
+  maxLifeLength: 120
   disease: 0
   target: {fileID: 0}
   contaminationRange: 20

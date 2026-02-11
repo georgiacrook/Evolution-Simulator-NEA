@@ -1,4 +1,4 @@
-using UnityEngine; //hello
+using UnityEngine;
 
 public class Movement : MonoBehaviour
 {

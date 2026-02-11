@@ -12,7 +12,7 @@ public class FoxLoader : OrganismLoader
     public string organismName;
     private string[] organismNameList = { "Bob", "Pete", "Robert", "Linda", "Gertrude", "Olivia" };
 
-    private int maxCount = 100;
+    private int maxCount = 250;
     private int batchSize = 10;
     private static bool alreadySpawned = false;
 
@@ -24,7 +24,7 @@ public class FoxLoader : OrganismLoader
         alreadySpawned = true;
 
         int requested = PlayerPrefs.GetInt("PredatorCountSlider", 10); //references the slider amount the user chose
-        int count = Mathf.Clamp(requested, 0, maxCount);   // ← cap
+        int count = Mathf.Clamp(requested, 0, maxCount); 
         foxCount.text = ($"Fox Count: {count.ToString()} ");
 
         StartCoroutine(Spawn(count)); //start spawning gradually

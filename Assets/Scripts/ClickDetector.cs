@@ -26,8 +26,6 @@ public class ClickDetector : MonoBehaviour
 
     private void OnMouseDown()
     {
-        Debug.Log("Clicked");
-
         if (SelectionPressuresScript != null && SelectionPressuresScript.disease)
         {
             Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto); //set cursor to normal 

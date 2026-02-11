@@ -20,9 +20,6 @@ public class FoxStates : OrganismStates
     protected override void Update()
     {
         base.Update();
-
-        //make it so that it only prints debug log if there isn't too many debug logs already printed
-        //Debug.Log("Speed: " + speed.ToString("F2"));
     }
 
     protected override void Eat()

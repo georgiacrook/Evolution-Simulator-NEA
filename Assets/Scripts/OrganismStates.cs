@@ -32,7 +32,7 @@ public class OrganismStates : MonoBehaviour
 
     //time management
     public float lifespanLength;
-    public float maxLifeLength = 300;
+    public float maxLifeLength = 120;
 
     public bool disease = false;
     private Vector3 lastPosition;
@@ -201,7 +201,7 @@ public class OrganismStates : MonoBehaviour
     {
         lifespanLength += Time.deltaTime;
 
-        if (lifespanLength >= maxLifeLength) //5 minutes
+        if (lifespanLength >= maxLifeLength) // 2 minutes
         {
             Die();
         }
@@ -252,9 +252,10 @@ public class OrganismStates : MonoBehaviour
                 //pass on disease
                 OrganismStates targetStates = target.GetComponent<OrganismStates>();
 
-                if (targetStates != null)
+                if (targetStates != null && !targetStates.disease)
                 {
                     targetStates.disease = true;
+                    targetStates.maxLifeLength = targetStates.maxLifeLength / 2;
                     Debug.Log($"{this.gameObject.name} passed on disease");
                 }
             }
